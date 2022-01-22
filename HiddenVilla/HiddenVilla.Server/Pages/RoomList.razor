@@ -1,0 +1,40 @@
+﻿@using HiddenVilla.Server.Model
+
+@if (Rooms is not null)
+{
+    <h3>Room List :</h3>
+
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Room name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Sq Ft</th>
+          <th scope="col">Occupancy</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var room in Rooms)
+            {
+                 <tr>
+                  <th scope="row">@room.RoomName</th>
+                  <td><input type="text" @bind-value="@room.Price" @bind-value:event="oninput" /></td>
+                   @foreach (var property in room.RoomProps)
+                    {
+                        <td>@property.Value</td>
+                    }
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    @foreach (var room in Rooms)
+    {
+        <p>@room.RoomName price is @room.Price</p>
+    }
+}
+
+@code {
+    [Parameter]
+    public List<BlazorRoom> Rooms { get; set; }
+}
