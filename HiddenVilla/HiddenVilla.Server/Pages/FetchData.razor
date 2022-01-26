@@ -1,48 +1,31 @@
 ﻿@page "/fetchdata"
+@using HiddenVilla.Server.Pages.LearnBlazor
 
-<PageTitle>Weather forecast</PageTitle>
+<p>Sending button in color @buttonColor to child</p>
+<p>Change color in parent using button</p>
+<button @onclick="ChangeColor">Parent button</button>
 
-@using HiddenVilla.Server.Data
-@inject WeatherForecastService ForecastService
-
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from a service.</p>
-
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<ChildComponent>
+    <buttonik>
+        <button class="@buttonClass">Child button</button>
+    </buttonik>
+</ChildComponent>
 
 @code {
-    private WeatherForecast[]? forecasts;
+    string buttonColor = "red";
+    string buttonClass = "btn-danger";
 
-    protected override async Task OnInitializedAsync()
+    private void ChangeColor()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        if (buttonColor.Contains("red"))
+        {
+            buttonColor = "blue";
+            buttonClass = "btn-primary";
+        }
+        else
+        {
+            buttonColor = "red";
+            buttonClass = "btn-danger"; 
+        }
     }
 }

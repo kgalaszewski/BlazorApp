@@ -1,0 +1,21 @@
+﻿@using HiddenVilla.Server.Model
+
+<div class="border p-2 mt-2">
+    <h2 class="text-info">Room List</h2>
+
+    <div class="container">
+            @if (Rooms is not null)
+            {
+                 @foreach (var room in Rooms)
+                 {
+                     <IndividualRoom Room="room"></IndividualRoom>
+                 }   
+            }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public List<BlazorRoom> Rooms { get; set; }
+}

@@ -1,0 +1,67 @@
+﻿@page "/bindProp"
+@using HiddenVilla.Server.Model
+
+<PageTitle>Hidden Villa Server</PageTitle>
+
+<h2 class="bg-light border p-2">First Room</h2>
+<br />
+Room: @Room.RoomName
+<br />
+Price: @Room.Price
+<br />
+<input type="number" @bind="Room.Price" @bind:event="oninput" />
+<br />
+<input type="checkbox" @bind="Room.IsActive" @bind:event="oninput" /> &nbsp; IsActive
+<br />
+<span>This room is @(Room.IsActive ? "Active" : "Inactive")</span>
+
+<select @bind="SelectedRoomProp">
+    @foreach (var property in Room.RoomProps)
+    {
+        <option value="@property.Name">@property.Name</option>
+    }
+</select>
+<span>The Room Prop selected is :@SelectedRoomProp</span>
+<br /> <br />
+<RoomList Rooms="BlazorRooms"></RoomList>
+
+@code {
+    string SelectedRoomProp="";
+
+    public List<BlazorRoom> BlazorRooms = new List<BlazorRoom>();
+
+    BlazorRoom Room = new ();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        BlazorRooms.AddRange(new List<BlazorRoom>
+        {
+            new ()
+            {
+                Id = 1,
+                RoomName = "Pokoj Kodiego",
+                IsActive = true,
+                Price = 2137,
+                RoomProps = new List<BlazorRoomProp>
+                {
+                    new() { Id=1, Name="Sq Ft", Value="100" },
+                    new() { Id=2, Name="Occupancy", Value="3" },
+                }
+            },
+            new ()
+            {
+                Id = 2,
+                RoomName = "Pokoj Karola",
+                IsActive = true,
+                Price = 7312,
+                RoomProps = new List<BlazorRoomProp>
+                {
+                    new() { Id=1, Name="Sq Ft", Value="2" },
+                    new() { Id=2, Name="Occupancy", Value="200" },
+                }
+            },
+        });
+        Room = BlazorRooms.FirstOrDefault();
+    }
+}
