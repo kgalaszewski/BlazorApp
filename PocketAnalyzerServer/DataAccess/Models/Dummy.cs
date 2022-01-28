@@ -1,9 +1,13 @@
-﻿namespace PocketAnalyzerServer.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DataAccess.Models;
 
 public class Dummy
 {
+    [Key]
     public int Id { get; set; }
+    [Required]
     public string Name { get; set; }
+    [Required]
     public string Value { get; set; }
-    public List<DummyDetails> DummyDetails { get; set; }
 }
