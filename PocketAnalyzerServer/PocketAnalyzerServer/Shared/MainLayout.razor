@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 
 <PageTitle>PocketAnalyzerServer</PageTitle>
 
@@ -9,7 +11,14 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            @if (!string.IsNullOrWhiteSpace(appVersionText))
+            {
+                <p style="align-self:center">@appVersionText</p>
+            }
+            else
+            {
+                <button class="btn btn-success" @onclick="ReadVersion">Check app version</button>                
+            }
         </div>
 
         <article class="content px-4">
@@ -17,3 +26,13 @@
         </article>
     </main>
 </div>
+
+@code {
+    private string appVersionText { get; set; }
+
+    private void ReadVersion()
+    {
+        var version = Configuration["Configuration:AppVersion"];
+        appVersionText = $"Current app version is : {version}";
+    }
+}
