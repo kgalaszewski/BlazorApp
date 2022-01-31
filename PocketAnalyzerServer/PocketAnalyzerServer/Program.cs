@@ -1,3 +1,4 @@
+using Business.Repository;
 using DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:LocalDbConnection"]));
+builder.Services.AddScoped<IDummyRepository, DummyRepository>();
 
 var app = builder.Build();
 

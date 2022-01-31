@@ -1,0 +1,52 @@
+﻿@page "/dummy/create"
+
+@using Business.Repository
+@using DataAccess.Models
+
+@inject IDummyRepository DummyRepository
+@inject NavigationManager NavigationManager
+
+<div class="row mt-2 mb-5">
+    <h3 class="card-title text-info mb-3 ml-3">@action Dummy</h3>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="dummy" OnValidSubmit="HandleDummyUpsert">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <InputText @bind-Value="dummy.Name" class="form-control" placeholder="Enter Name"></InputText>
+                        <ValidationMessage For="() => dummy.Name"></ValidationMessage>
+                    </div> <br />
+                    <div class="form-group">
+                        <label>Value</label>
+                        <InputText @bind-Value="dummy.Value" class="form-control" placeholder="Enter Value"></InputText>
+                        <ValidationMessage For="() => dummy.Value"></ValidationMessage>
+                    </div> <br />
+                    <div class="form-group">
+                        <button class="btn-success">@action</button> <br /> <br />
+                        <NavLink href="dummy" class="btnalert-primary">Back to main page</NavLink>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Dummy dummy = new Dummy();
+    private string action { get; set; } = "Create";
+
+    private async Task HandleDummyUpsert()
+    {
+        if (action.Equals("Create"))
+        {
+            await DummyRepository.CreateDummyAsync(dummy);
+            NavigationManager.NavigateTo("dummy");
+        }
+        else
+        {
+            // await DummyRepository.UpdateDummyAsync()            
+        }
+    }
+}

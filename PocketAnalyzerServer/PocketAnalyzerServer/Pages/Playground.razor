@@ -1,7 +1,42 @@
 ﻿@page "/playGround"
+@inject IJSRuntime JSRuntime
 
 <h3>Playground</h3>
 
-@code {
+<h4>BlazorJS</h4>
 
+<div class="row">
+    <button class="btn btn-secondary" @onclick="TestConfirmBox">Test Confirm Box</button>
+</div>
+<div class="row">
+    @if (userAnswer)
+    {
+        <p>Its a yes</p>
+    }
+</div> 
+<h1>Toastr js test</h1>
+<p>Test git</p>
+<button @onclick="OnSuccess">Gitowka</button>
+<p>Test failure</p>
+<button @onclick="OnFailure">Failure</button>
+
+
+@code {
+    private string confirmMessage = "Are you sure you want to click?";
+    private bool userAnswer { get; set; }
+
+    private async Task TestConfirmBox()
+    {
+        userAnswer = await JSRuntime.InvokeAsync<bool>("confirm", confirmMessage);
+    }
+
+    private async Task OnSuccess()
+    {
+        await JSRuntime.ToastrSuccess("wiadomosc ze git");
+    }
+    
+    private async Task OnFailure()
+    {
+        await JSRuntime.ToastrError("wiadomosc ze fail");
+    }
 }

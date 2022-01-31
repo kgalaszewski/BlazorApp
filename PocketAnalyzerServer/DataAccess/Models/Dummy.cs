@@ -6,8 +6,10 @@ public class Dummy
 {
     [Key]
     public int Id { get; set; }
-    [Required]
+
+    [Required(AllowEmptyStrings = false)]
     public string Name { get; set; }
-    [Required]
+
+    [Required(AllowEmptyStrings = false)]
     public string Value { get; set; }
 }

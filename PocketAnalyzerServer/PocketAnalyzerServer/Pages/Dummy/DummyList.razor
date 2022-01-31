@@ -1,0 +1,53 @@
+﻿@page "/dummy"
+
+@using Business.Repository
+@using DataAccess.Models
+
+@inject IDummyRepository DummyRepository
+
+<div class="row mt-4">
+    <div class=col-8>
+        <h4>Dummies</h4>
+    </div>
+    <div class="col-3 offset-1">
+        <NavLink href="dummy/create" class="btn-info form-control">Add new Dummy</NavLink>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-12">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (dummies is not null)
+                {
+                    @foreach (var dummy in dummies)
+                    {
+                       <tr>
+                           <th>@dummy.Name</th>
+                           <th>@dummy.Value</th>
+                           <th>Create</th>
+                           <th>Update</th>
+                       </tr>                            
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<Dummy> dummies { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        dummies = await DummyRepository.GetAllDummiesAsync();
+        await base.OnInitializedAsync();
+    }
+}
