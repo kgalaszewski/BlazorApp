@@ -13,4 +13,13 @@ public static class IJSRuntimeExtension
     {
         await JSRuntime.InvokeVoidAsync("ShowToastr", "bad", message);
     }
+    public static async ValueTask SwalSuccessAlert(this IJSRuntime JSRuntime, string message, string buttonMessage)
+    {
+        await JSRuntime.InvokeVoidAsync("SwalAlert", "git", message, buttonMessage);
+    }
+
+    public static async ValueTask SwalErrorAlert(this IJSRuntime JSRuntime, string message, string buttonMessage)
+    {
+        await JSRuntime.InvokeVoidAsync("SwalAlert", "bad", message, buttonMessage);
+    }
 }

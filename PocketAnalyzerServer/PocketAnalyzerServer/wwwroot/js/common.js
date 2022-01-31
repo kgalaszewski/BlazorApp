@@ -6,3 +6,12 @@
         toastr.error(message, 'Faled fhoy')
     }
 }
+
+window.SwalAlert = (type, message, buttonMessage) => {
+    if (type === "git") {
+        Swal.fire(message, buttonMessage, 'success')
+    }
+    if (type === 'bad') {
+        Swal.fire(message, buttonMessage, 'error')
+    }
+}

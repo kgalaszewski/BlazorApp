@@ -16,13 +16,25 @@
 </div> 
 <h1>Toastr js test</h1>
 <p>Test git</p>
-<button @onclick="OnSuccess">Gitowka</button>
+<button @onclick="() => OnSuccess(successMessage)">Gitowka</button>
 <p>Test failure</p>
-<button @onclick="OnFailure">Failure</button>
+<button @onclick="() => OnFailure(failureMessage)">Failure</button>
+<br />
+<br />
+<h1>Sweet alert test</h1>
+<p>Test git</p>
+<button @onclick="() => SwalOnSuccess(swallSuccessMessage)">Gitowka</button>
+<p>Test failure</p>
+<button @onclick="() => SwalOnFailure(swalFailureMessage)">Failure</button>
 
 
 @code {
     private string confirmMessage = "Are you sure you want to click?";
+    private string successMessage = "gitara 123";
+    private string swallSuccessMessage = "gitara 123";
+    private string failureMessage = "nie jest gitara 123";
+    private string swalFailureMessage = "nie jest gitara 123";
+    private string swalOnClickMessage = "on click message !";
     private bool userAnswer { get; set; }
 
     private async Task TestConfirmBox()
@@ -30,13 +42,23 @@
         userAnswer = await JSRuntime.InvokeAsync<bool>("confirm", confirmMessage);
     }
 
-    private async Task OnSuccess()
+    private async Task OnSuccess(string message)
     {
-        await JSRuntime.ToastrSuccess("wiadomosc ze git");
+        await JSRuntime.ToastrSuccess(message);
     }
     
-    private async Task OnFailure()
+    private async Task OnFailure(string message)
     {
-        await JSRuntime.ToastrError("wiadomosc ze fail");
+        await JSRuntime.ToastrError(message);
+    }
+
+    private async Task SwalOnSuccess(string message)
+    {
+        await JSRuntime.SwalSuccessAlert(message, swalOnClickMessage);
+    }
+    
+    private async Task SwalOnFailure(string message)
+    {
+        await JSRuntime.SwalErrorAlert(message, swalOnClickMessage);
     }
 }
