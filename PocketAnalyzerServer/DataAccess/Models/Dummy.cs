@@ -12,4 +12,6 @@ public class Dummy
 
     [Required(AllowEmptyStrings = false)]
     public string Value { get; set; }
+
+    public virtual ICollection<DummyImage> DummyImages { get; set; }
 }

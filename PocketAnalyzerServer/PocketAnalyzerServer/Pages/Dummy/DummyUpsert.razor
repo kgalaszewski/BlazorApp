@@ -3,9 +3,13 @@
 
 @using Business.Repository
 @using DataAccess.Models
+@using PocketAnalyzerServer.Services
 
 @inject IDummyRepository DummyRepository
 @inject NavigationManager NavigationManager
+@inject IImageUploadService ImageUploadService
+@inject IDummyImageRepository DummyImageRepository
+@inject IJSRuntime JSRuntime
 
 <div class="row mt-2 mb-5">
     <h3 class="card-title text-info mb-3 ml-3">@action Dummy</h3>
@@ -25,6 +29,22 @@
                         <ValidationMessage For="() => dummy.Value"></ValidationMessage>
                     </div> <br />
                     <div class="form-group">
+                        <InputFile OnChange="HandleImageUpload" multiple> Upload Images</InputFile>
+                        <div class="row">
+                            @if (uploadedImages.Any())
+                            {
+                                foreach (var image in uploadedImages)
+                                {
+                                    <p>@image</p>
+                                    <div class="col-md-2 mt-3">
+                                        <img src="@image" asp-append-version="true" width="300px" />
+                                    </div>                    
+                                    <input type="button" class="btn-danger btn-block mt-4" value="Delete"/>
+                                }
+                            }
+                        </div>
+                    </div> <br />
+                    <div class="form-group">
                         <button class="btn-success">@action</button> <br /> <br />
                         <NavLink href="dummy" class="btnalert-primary">Back to main page</NavLink>
                     </div>
@@ -40,6 +60,7 @@
 
     private Dummy dummy { get; set; } = new();
     private string action { get; set; } = "Create";
+    private List<string> uploadedImages { get; set; } = new List<string>();
 
     private async Task HandleDummyUpsert()
     {
@@ -51,7 +72,7 @@
         {
             await DummyRepository.UpdateDummyAsync((int)Id, dummy);            
         }
-        
+
         NavigationManager.NavigateTo("dummy");
     }
 
@@ -61,6 +82,49 @@
         {
             action = "Update";
             dummy = await DummyRepository.GetDummyAsync(Id.Value);
+        }
+    }
+
+    private async Task HandleImageUpload(InputFileChangeEventArgs eventArgs)
+    {
+        try
+        {
+            var acceptedExtensions = new List<string>
+            {
+                ".jpg",
+                ".png",
+                ".jpeg"
+            };
+            uploadedImages = new List<string>();
+            if (eventArgs.FileCount > 0)
+            {
+                foreach (var uploadedImage in eventArgs.GetMultipleFiles())
+                {
+                    var fileInfo = new FileInfo(uploadedImage.Name);
+                    if (acceptedExtensions.Contains(fileInfo.Extension.ToLower()))
+                    {
+                        var uploadedImagePath = await ImageUploadService.UploadImage(uploadedImage);
+                        uploadedImages.Add(uploadedImagePath);
+                    }
+                }
+
+                if (!uploadedImages.Any())
+                {
+                    await JSRuntime.ToastrError($"Please select one of these formats : {string.Concat(acceptedExtensions.Select(x => " " + x + " "))}");
+                }
+            }
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    private async Task AddImagesToDummy()
+    {
+        foreach (var image in uploadedImages)
+        {
+            // TODO sekcja 7 film 86, czas - 2:10
         }
     }
 }

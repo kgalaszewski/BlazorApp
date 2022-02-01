@@ -7,6 +7,7 @@ public class ApplicationDbContext : DbContext
 {
     public DbSet<Dummy> Dummies { get; set; }
     public DbSet<DummyDetails> DummyDetails { get; set; }
+    public DbSet<DummyImage> DummyImages { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     { }

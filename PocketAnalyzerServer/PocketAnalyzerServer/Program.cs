@@ -2,6 +2,7 @@ using Business.Repository;
 using DataAccess.Data;
 using MatBlazor;
 using Microsoft.EntityFrameworkCore;
+using PocketAnalyzerServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddMatBlazor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:LocalDbConnection"]));
 builder.Services.AddScoped<IDummyRepository, DummyRepository>();
+builder.Services.AddScoped<IDummyImageRepository, DummyImageRepository>();
+builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
 
 var app = builder.Build();
 

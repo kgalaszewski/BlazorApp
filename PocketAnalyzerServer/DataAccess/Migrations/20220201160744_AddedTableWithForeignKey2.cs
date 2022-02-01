@@ -4,7 +4,7 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class AddedTableWithForeignKey2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
