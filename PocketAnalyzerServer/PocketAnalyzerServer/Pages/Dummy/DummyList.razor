@@ -4,6 +4,8 @@
 @using DataAccess.Models
 
 @inject IDummyRepository DummyRepository
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 <div class="row mt-4">
     <div class=col-8>
@@ -25,29 +27,70 @@
                 </tr>
             </thead>
             <tbody>
-                @if (dummies is not null)
+                @if (dummies is not null && dummies.Any())
                 {
                     @foreach (var dummy in dummies)
                     {
-                       <tr>
-                           <th>@dummy.Name</th>
-                           <th>@dummy.Value</th>
-                           <th>Create</th>
-                           <th>Update</th>
-                       </tr>                            
+                        <tr>
+                            <td>@dummy.Name</td>
+                            <td>@dummy.Value</td>
+                            <td><NavLink href="@($"dummy/edit/{dummy.Id}")" class="btn btn-primary">Edit</NavLink></td>
+                            <td><button @onclick="() => DeleteDummy(dummy.Id, dummy.Name)" class="btn btn-danger">Delete</button></td>
+                        </tr>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td>No data queried.</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+@if (currentlyUpdating)
+{
+    <MatProgressCircle FourColored="true" Indeterminate="true" Size="MatProgressCircleSize.Large" />    
+}
+else
+{
+    <button @onclick="UpdateDummiesList" class="btn-success">Update Dummies List</button>
+}
+
 
 @code {
     private IEnumerable<Dummy> dummies { get; set; }
+    private bool value { get; set; }
+    private bool currentlyUpdating { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         dummies = await DummyRepository.GetAllDummiesAsync();
         await base.OnInitializedAsync();
+    }
+
+    private async void DeleteDummy(int Id, string name)
+    {
+        var isDeleted = await DummyRepository.DeleteDummyAsync(Id);
+        if (isDeleted)
+        {
+            dummies = dummies.Where(dummy => dummy.Id != Id).ToList();
+        }
+        await JSRuntime.SwalOnDelete($"Dummy with Name {name} has been deleted!");
+
+        StateHasChanged();
+    }
+
+    private async void UpdateDummiesList()
+    {
+        currentlyUpdating = true;
+        await Task.Delay(2000);
+
+        dummies = await DummyRepository.GetAllDummiesAsync();
+
+        currentlyUpdating = false;
+        await JSRuntime.SwalOnDelete("Successfuly updated list of dummies !");
+        StateHasChanged();
     }
 }

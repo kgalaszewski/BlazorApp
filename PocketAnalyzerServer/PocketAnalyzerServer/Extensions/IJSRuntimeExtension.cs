@@ -22,4 +22,9 @@ public static class IJSRuntimeExtension
     {
         await JSRuntime.InvokeVoidAsync("SwalAlert", "bad", message, buttonMessage);
     }
+
+    public static async ValueTask SwalOnDelete(this IJSRuntime JSRuntime, string onDeleteMessage)
+    {
+        await JSRuntime.InvokeVoidAsync("SwalOnDelete", onDeleteMessage);
+    }
 }

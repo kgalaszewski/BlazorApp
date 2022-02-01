@@ -1,5 +1,6 @@
 using Business.Repository;
 using DataAccess.Data;
+using MatBlazor;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddMatBlazor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:LocalDbConnection"]));
 builder.Services.AddScoped<IDummyRepository, DummyRepository>();
 

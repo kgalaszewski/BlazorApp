@@ -1,4 +1,5 @@
 ﻿@page "/dummy/create"
+@page "/dummy/edit/{Id:int}"
 
 @using Business.Repository
 @using DataAccess.Models
@@ -34,7 +35,10 @@
 </div>
 
 @code {
-    private Dummy dummy = new Dummy();
+    [Parameter]
+    public int? Id { get; set; }
+
+    private Dummy dummy { get; set; } = new();
     private string action { get; set; } = "Create";
 
     private async Task HandleDummyUpsert()
@@ -42,11 +46,21 @@
         if (action.Equals("Create"))
         {
             await DummyRepository.CreateDummyAsync(dummy);
-            NavigationManager.NavigateTo("dummy");
         }
         else
         {
-            // await DummyRepository.UpdateDummyAsync()            
+            await DummyRepository.UpdateDummyAsync((int)Id, dummy);            
+        }
+        
+        NavigationManager.NavigateTo("dummy");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is not null)
+        {
+            action = "Update";
+            dummy = await DummyRepository.GetDummyAsync(Id.Value);
         }
     }
 }

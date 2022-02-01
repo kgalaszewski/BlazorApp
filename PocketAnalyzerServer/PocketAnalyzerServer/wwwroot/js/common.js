@@ -15,3 +15,13 @@ window.SwalAlert = (type, message, buttonMessage) => {
         Swal.fire(message, buttonMessage, 'error')
     }
 }
+
+window.SwalOnDelete = (onDeleteMessage) => {
+    Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: onDeleteMessage,
+        showConfirmButton: false,
+        timer: 1500
+    })
+}
