@@ -45,10 +45,10 @@
                         </div>
                         <br /><br />
                         <div class="row">
-                            @if (currentImages.Any())
+                            @if (Id is not null && currentImages.Any())
                             {
                                 <h2>Dummy Images</h2>
-                                foreach (var image in currentImages)
+                                foreach (var image in dummy.DummyImages)
                                 {
                                     <div class="col-md-2 mt-3">
                                         <img src="@image.ImageUrl" asp-append-version="true" width="100px" />
@@ -107,8 +107,7 @@
         {
             action = "Update";
             dummy = await DummyRepository.GetDummyAsync(Id.Value);
-            currentImages = (await DummyImageRepository.GetAllDummyImagesForDummy(Id.Value))
-                .ToList();
+            currentImages = dummy.DummyImages.ToList();
         }
     }
 

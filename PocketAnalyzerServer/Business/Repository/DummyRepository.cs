@@ -31,7 +31,9 @@ public class DummyRepository : IDummyRepository
     {
         try
         {
-            return await _dbContext.Dummies.ToListAsync();
+            return await _dbContext.Dummies
+                .Include(dummy => dummy.DummyImages)
+                .ToListAsync();
         }
         catch (Exception ex)
         {
@@ -43,7 +45,9 @@ public class DummyRepository : IDummyRepository
     {
         try
         {
-            return await _dbContext.Dummies.FirstOrDefaultAsync(dummy => dummy.Id == id);
+            return await _dbContext.Dummies
+                .Include(dummy => dummy.DummyImages)
+                .FirstOrDefaultAsync(dummy => dummy.Id == id);
         }
         catch (Exception ex)
         {

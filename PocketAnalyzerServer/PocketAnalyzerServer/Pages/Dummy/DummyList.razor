@@ -76,7 +76,6 @@ else
         var isDeleted = await DummyRepository.DeleteDummyAsync(Id);
         if (isDeleted)
         {
-            await DummyImageRepository.DeleteAllDummyImages(Id);
             dummies = dummies.Where(dummy => dummy.Id != Id).ToList();
         }
         await JSRuntime.SwalOnDelete($"Dummy with Name {name} has been deleted!");
