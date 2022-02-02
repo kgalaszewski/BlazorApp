@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
+
 @using Microsoft.Extensions.Configuration
+@using PocketAnalyzerServer.Pages.Shared
+
 @inject IConfiguration Configuration
 
 <PageTitle>PocketAnalyzerServer</PageTitle>
@@ -19,6 +22,9 @@
             {
                 <button class="btn btn-success" @onclick="ReadVersion">Check app version</button>                
             }
+        </div>
+        <div class="top-row px=r">
+            <LoginRegisterUser></LoginRegisterUser>
         </div>
 
         <article class="content px-4">

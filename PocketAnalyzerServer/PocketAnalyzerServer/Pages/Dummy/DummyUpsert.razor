@@ -1,6 +1,8 @@
 ﻿@page "/dummy/create"
 @page "/dummy/edit/{Id:int}"
 
+@attribute [Authorize(Roles = "admin")]
+
 @using Business.Repository
 @using DataAccess.Models
 @using PocketAnalyzerServer.Services

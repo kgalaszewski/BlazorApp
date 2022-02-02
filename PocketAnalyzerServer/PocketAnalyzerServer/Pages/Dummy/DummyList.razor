@@ -10,6 +10,8 @@
 @inject NavigationManager NavigationManager
 @inject IImageUploadService ImageUploadService
 
+@attribute [Authorize]
+
 <div class="row mt-4">
     <div class=col-8>
         <h4>Dummies</h4>
@@ -37,8 +39,15 @@
                         <tr>
                             <td>@dummy.Name</td>
                             <td>@dummy.Value</td>
-                            <td><NavLink href="@($"dummy/edit/{dummy.Id}")" class="btn btn-primary">Edit</NavLink></td>
-                            <td><button @onclick="() => DeleteDummy(dummy)" class="btn btn-danger">Delete</button></td>
+                            <AuthorizeView Roles="admin">
+                                <Authorized>                                    
+                                    <td><NavLink href="@($"dummy/edit/{dummy.Id}")" class="btn btn-primary">Edit</NavLink></td>
+                                    <td><button @onclick="() => DeleteDummy(dummy)" class="btn btn-danger">Delete</button></td>
+                                </Authorized>
+                                <NotAuthorized>
+                                    <td><NavLink href="@($"dummy/edit/{dummy.Id}")" class="btn btn-primary">Edit</NavLink></td>
+                                </NotAuthorized>
+                            </AuthorizeView>
                         </tr>
                     }
                 }

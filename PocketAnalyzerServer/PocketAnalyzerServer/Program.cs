@@ -12,8 +12,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMatBlazor();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:LocalDbConnection"]));
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI()
+    .AddRoles<IdentityRole>();
 builder.Services.AddScoped<IDummyRepository, DummyRepository>();
 builder.Services.AddScoped<IDummyImageRepository, DummyImageRepository>();
 builder.Services.AddScoped<IImageUploadService, ImageUploadService>();
