@@ -33,16 +33,30 @@
                         <div class="row">
                             @if (uploadedImages.Any())
                             {
+                                <h2>Currently uploaded images</h2>
                                 foreach (var image in uploadedImages)
                                 {
-                                    <p>@image</p>
                                     <div class="col-md-2 mt-3">
-                                        <img src="@image" asp-append-version="true" width="300px" />
+                                        <img src="@image" asp-append-version="true" width="100px" />
+                                        <input @onclick="() => DeleteFromUploaded(image)" type="button" class="btn-danger btn-block mt-4" value="Delete" size="4"/>
                                     </div>                    
-                                    <input type="button" class="btn-danger btn-block mt-4" value="Delete"/>
                                 }
                             }
                         </div>
+                        <br /><br />
+                        <div class="row">
+                            @if (currentImages.Any())
+                            {
+                                <h2>Dummy Images</h2>
+                                foreach (var image in currentImages)
+                                {
+                                    <div class="col-md-2 mt-3">
+                                        <img src="@image.ImageUrl" asp-append-version="true" width="100px" />
+                                        <input @onclick="() => DeleteForDummy(image)" type="button" class="btn-danger btn-block mt-4" value="Delete" size="4"/>
+                                    </div>                    
+                                }
+                            }
+                       </div>
                     </div> <br />
                     <div class="form-group">
                         <button class="btn-success">@action</button> <br /> <br />
@@ -61,16 +75,27 @@
     private Dummy dummy { get; set; } = new();
     private string action { get; set; } = "Create";
     private List<string> uploadedImages { get; set; } = new List<string>();
+    private List<DummyImage> currentImages { get; set; } = new List<DummyImage>();
+    private List<DummyImage> currentToBeDeleted { get; set; } = new List<DummyImage>();
 
     private async Task HandleDummyUpsert()
     {
         if (action.Equals("Create"))
         {
-            await DummyRepository.CreateDummyAsync(dummy);
+            var dummyId = (await DummyRepository.CreateDummyAsync(dummy)).Id;
+            await AddImages(uploadedImages, dummyId);
+            await JSRuntime.ToastrSuccess("Dummy created successfuly");
         }
         else
-        {
-            await DummyRepository.UpdateDummyAsync((int)Id, dummy);            
+        {    
+            await DummyRepository.UpdateDummyAsync(Id.Value, dummy);
+            await AddImages(uploadedImages, Id.Value);
+            currentToBeDeleted.ForEach(async image =>
+            {
+                await DummyImageRepository.DeleteDummyImage(image.Id);
+                ImageUploadService.DeleteImage(image.ImageUrl);
+            });
+            await JSRuntime.ToastrSuccess("Dummy updated successfuly");
         }
 
         NavigationManager.NavigateTo("dummy");
@@ -82,6 +107,8 @@
         {
             action = "Update";
             dummy = await DummyRepository.GetDummyAsync(Id.Value);
+            currentImages = (await DummyImageRepository.GetAllDummyImagesForDummy(Id.Value))
+                .ToList();
         }
     }
 
@@ -120,11 +147,27 @@
         }
     }
 
-    private async Task AddImagesToDummy()
+    private async Task AddImages(IEnumerable<string> images, int dummyId)
     {
-        foreach (var image in uploadedImages)
+        foreach (var image in images)
         {
-            // TODO sekcja 7 film 86, czas - 2:10
+            await DummyImageRepository.CreateDummyImage(new()
+                {
+                    ImageUrl = image,
+                    DummyId = dummyId
+                });
         }
+    }
+
+    private async void DeleteFromUploaded(string imageUrl)
+    {
+        uploadedImages.Remove(imageUrl);
+        ImageUploadService.DeleteImage(imageUrl);
+    }
+
+    private async Task DeleteForDummy(DummyImage image)
+    {
+        currentToBeDeleted.Add(image);
+        currentImages.Remove(image);
     }
 }

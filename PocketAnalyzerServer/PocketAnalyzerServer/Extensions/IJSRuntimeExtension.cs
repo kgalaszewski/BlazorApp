@@ -27,4 +27,10 @@ public static class IJSRuntimeExtension
     {
         await JSRuntime.InvokeVoidAsync("SwalOnDelete", onDeleteMessage);
     }
+
+    public static async ValueTask<bool> OverrideConfirm(this IJSRuntime JSRuntime)
+    {
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("OverrideConfirm");
+        return isConfirmed;
+    }
 }

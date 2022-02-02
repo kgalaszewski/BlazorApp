@@ -25,3 +25,13 @@ window.SwalOnDelete = (onDeleteMessage) => {
         timer: 1500
     })
 }
+
+window.SwalConfirm = () => {
+    result = confirm()
+
+    if (result) {
+        return true
+    }
+
+    return false
+}
