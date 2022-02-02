@@ -15,7 +15,7 @@ namespace PocketAnalyzerServer.Services
         {
             try
             {
-                FileInfo fileInfo = new FileInfo(image.Name);
+                var fileInfo = new FileInfo(image.Name);
                 var fileName = Guid.NewGuid().ToString() + fileInfo.Extension;
                 var imagesFolderName = "Images";
                 var folderDirectory = $"{_webHostEnvironment.WebRootPath}\\{imagesFolderName}";
@@ -44,7 +44,7 @@ namespace PocketAnalyzerServer.Services
         {
             try
             {
-                var path = $"{_webHostEnvironment.WebRootPath}\\Images\\{imageName}";
+                var path = $"{_webHostEnvironment.WebRootPath}\\{imageName.Replace("/", "\\")}";
                 if (File.Exists(path))
                 {
                     File.Delete(path);
