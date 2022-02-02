@@ -48,7 +48,7 @@
                             @if (Id is not null && currentImages.Any())
                             {
                                 <h2>Dummy Images</h2>
-                                foreach (var image in dummy.DummyImages)
+                                foreach (var image in currentImages)
                                 {
                                     <div class="col-md-2 mt-3">
                                         <img src="@image.ImageUrl" asp-append-version="true" width="100px" />

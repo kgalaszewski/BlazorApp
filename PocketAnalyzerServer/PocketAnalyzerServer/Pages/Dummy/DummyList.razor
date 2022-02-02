@@ -2,11 +2,13 @@
 
 @using Business.Repository
 @using DataAccess.Models
+@using Services
 
 @inject IDummyRepository DummyRepository
 @inject IDummyImageRepository DummyImageRepository
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject IImageUploadService ImageUploadService
 
 <div class="row mt-4">
     <div class=col-8>
@@ -36,7 +38,7 @@
                             <td>@dummy.Name</td>
                             <td>@dummy.Value</td>
                             <td><NavLink href="@($"dummy/edit/{dummy.Id}")" class="btn btn-primary">Edit</NavLink></td>
-                            <td><button @onclick="() => DeleteDummy(dummy.Id, dummy.Name)" class="btn btn-danger">Delete</button></td>
+                            <td><button @onclick="() => DeleteDummy(dummy)" class="btn btn-danger">Delete</button></td>
                         </tr>
                     }
                 }
@@ -71,14 +73,19 @@ else
         await base.OnInitializedAsync();
     }
 
-    private async void DeleteDummy(int Id, string name)
+    private async void DeleteDummy(Dummy dummy)
     {
-        var isDeleted = await DummyRepository.DeleteDummyAsync(Id);
+        var isDeleted = await DummyRepository.DeleteDummyAsync(dummy.Id);
         if (isDeleted)
         {
-            dummies = dummies.Where(dummy => dummy.Id != Id).ToList();
+            dummy.DummyImages.ToList().ForEach(image =>
+            {
+                ImageUploadService.DeleteImage(image.ImageUrl);
+            });
+
+            dummies = dummies.Where(dummyy => dummyy.Id != dummy.Id).ToList();
         }
-        await JSRuntime.SwalOnDelete($"Dummy with Name {name} has been deleted!");
+        await JSRuntime.SwalOnDelete($"Dummy with Name {dummy.Name} has been deleted!");
 
         StateHasChanged();
     }
